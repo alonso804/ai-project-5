@@ -26,7 +26,7 @@ def show_img(imgs, name, size=3, color=True):
         plt.show()
 
 
-def train(model, optimizer, loss_fn, num_epochs):
+def train(model, optimizer, loss_fn, num_epochs, train_loader):
     loss_vals = []
     running_loss = 0.0
 
@@ -62,10 +62,11 @@ def train(model, optimizer, loss_fn, num_epochs):
 def main():
     batch_size = 64
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    print(device)
 
     dataset = LungsDataset(
-        csv_file=csv_path,
-        root_dir=root_dir,
+        csv_file="./data.csv",
+        root_dir="./",
         transform=transforms.ToTensor())
 
     size = len(dataset)
@@ -78,6 +79,9 @@ def main():
     test_loader = DataLoader(
         dataset=test_set, batch_size=batch_size, shuffle=True)
 
+    img, _ = dataset[10]
+    show_img(img, 'Temp')
+
     # Hyperparameters
     num_classes = 4  # Constant
     learning_rate = 0.001
@@ -88,7 +92,7 @@ def main():
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
     # Train
-    loss_results = train(model, optimizer, loss_fn, num_epochs)
+    # loss_results = train(model, optimizer, loss_fn, num_epochs, train_loader)
 
 
 if __name__ == "__main__":
