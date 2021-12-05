@@ -12,16 +12,23 @@ class CNN(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
         self.layer2 = nn.Sequential(
-            nn.Conv2d(16, 32, kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(16, 32,
+                      kernel_size=5, stride=1, padding=2),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
-        self.fc = nn.Linear(7*7*32, num_classes)
+        self.fc = nn.Linear(75*75*32, num_classes)
 
     def forward(self, x):
+        print("x   :", x.shape)
         out = self.layer1(x)
+        print("out1:", out.shape)
         out = self.layer2(out)
+        print("out2:", out.shape)
         out = out.reshape(out.size(0), -1)
+        print("out3:", out.shape)
         out = self.fc(out)
+        print("out4:", out.shape)
+        print()
         return out
 
 

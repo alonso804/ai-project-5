@@ -15,7 +15,6 @@ class LungsDataset(Dataset):
         return len(self.annotations)
 
     def __getitem__(self, index):
-        print(index)
         img_path = os.path.join(self.root_dir, self.annotations.iloc[index, 0])
         image = io.imread(img_path)
         y_label = torch.tensor(int(self.annotations.iloc[index, 1]))

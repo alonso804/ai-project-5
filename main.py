@@ -26,7 +26,7 @@ def show_img(imgs, name, size=3, color=True):
         plt.show()
 
 
-def train(model, optimizer, loss_fn, num_epochs, train_loader):
+def train(model, optimizer, loss_fn, num_epochs, train_loader, device):
     loss_vals = []
     running_loss = 0.0
 
@@ -38,9 +38,12 @@ def train(model, optimizer, loss_fn, num_epochs, train_loader):
 
     for epoch in range(num_epochs):
         for i, (img, label) in enumerate(train_loader):
+            print(i)
+            print(img.shape)
             img = img.to(device)
             label = label.to(device)
 
+            # print(img)
             output = model(img)
             loss = loss_fn(output, label)
 
@@ -67,7 +70,11 @@ def main():
     dataset = LungsDataset(
         csv_file="./data.csv",
         root_dir="./",
-        transform=transforms.ToTensor())
+        transform=torchvision.transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Grayscale(),
+            transforms.ToTensor(),
+        ]))
 
     size = len(dataset)
     train_size = int(7 / 10 * size)
@@ -88,14 +95,16 @@ def main():
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-    img, _ = dataset[17007]
-    show_img(img, 'Temp')
-    print(train_loader)
+    # img, _ = dataset[13]
+    # print(img.shape)
+    # show_img(img, 'Temp')
+    # print(train_loader)
     # for i, (img, label) in enumerate(train_loader):
     # print(label)
 
     # Train
-    # loss_results = train(model, optimizer, loss_fn, num_epochs, train_loader)
+    loss_results = train(model, optimizer, loss_fn,
+                         num_epochs, train_loader, device)
 
 
 if __name__ == "__main__":
