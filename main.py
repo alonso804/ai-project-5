@@ -89,9 +89,9 @@ def main():
     # Hyperparameters
     num_classes = 4  # Constant
     learning_rate = 0.001
-    num_epochs = 20
+    num_epochs = 50
 
-    model = CNN(num_classes).to(device)
+    model = CNN_bnd().to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -105,6 +105,9 @@ def main():
     # Train
     loss_results = train(model, optimizer, loss_fn,
                          num_epochs, train_loader, device)
+    print("Saving ...")
+    torch.save(model.state_dict(), "model_70.txt")
+    print("Saved ...")
 
 
 if __name__ == "__main__":
