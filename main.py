@@ -79,9 +79,6 @@ def main():
     test_loader = DataLoader(
         dataset=test_set, batch_size=batch_size, shuffle=True)
 
-    img, _ = dataset[10]
-    show_img(img, 'Temp')
-
     # Hyperparameters
     num_classes = 4  # Constant
     learning_rate = 0.001
@@ -90,6 +87,12 @@ def main():
     model = CNN(num_classes).to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+    img, _ = dataset[17007]
+    show_img(img, 'Temp')
+    print(train_loader)
+    # for i, (img, label) in enumerate(train_loader):
+    # print(label)
 
     # Train
     # loss_results = train(model, optimizer, loss_fn, num_epochs, train_loader)
