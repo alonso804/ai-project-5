@@ -4,19 +4,39 @@ import math
 
 
 class CNN(nn.Module):
-    def __init__(self, num_classes=10):
+    def __init__(self, num_classes=4):
         super(CNN, self).__init__()
         self.layer1 = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=16,
-                      kernel_size=3, stride=1, padding=2),
+            nn.Conv2d(in_channels=1, out_channels=64,
+                      kernel_size=7, stride=2, padding=3),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
+
         self.layer2 = nn.Sequential(
-            nn.Conv2d(16, 32,
-                      kernel_size=5, stride=1, padding=2),
+            nn.Conv2d(64, 64,
+                      kernel_size=3, stride=1, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
-        self.fc = nn.Linear(75*75*32, num_classes)
+
+        self.layer3 = nn.Sequential(
+            nn.Conv2d(64, 128,
+                      kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2))
+
+        self.layer4 = nn.Sequential(
+            nn.Conv2d(128, 256,
+                      kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2))
+
+        self.layer5 = nn.Sequential(
+            nn.Conv2d(256, 512,
+                      kernel_size=3, stride=1, padding=1),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=2, stride=2))
+
+        self.fc = nn.Linear(4*4*512, num_classes)
 
     def forward(self, x):
         # print("x   :", x.shape)
@@ -24,10 +44,16 @@ class CNN(nn.Module):
         # print("out1:", out.shape)
         out = self.layer2(out)
         # print("out2:", out.shape)
-        out = out.reshape(out.size(0), -1)
+        out = self.layer3(out)
         # print("out3:", out.shape)
-        out = self.fc(out)
+        out = self.layer4(out)
         # print("out4:", out.shape)
+        out = self.layer5(out)
+        # print("out5:", out.shape)
+        out = out.reshape(out.size(0), -1)
+        # print("out6:", out.shape)
+        out = self.fc(out)
+        # print("out7:", out.shape)
         # print()
         return out
 

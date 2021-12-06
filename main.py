@@ -89,7 +89,8 @@ def main():
     learning_rate = 0.001
     num_epochs = 50
 
-    model = CNN_bn().to(device)
+    model = CNN().to(device)
+    # print(model)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
