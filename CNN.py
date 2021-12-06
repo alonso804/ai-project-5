@@ -34,7 +34,7 @@ class CNN(nn.Module):
 
 class CNN_bn(nn.Module):
     def __init__(self, num_classes=4, num_epochs=50):
-        super(CNN, self).__init__()
+        super(CNN_bn, self).__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=16,
                       kernel_size=3, stride=1, padding=2),
@@ -46,7 +46,7 @@ class CNN_bn(nn.Module):
             nn.BatchNorm2d(32, eps=num_epochs),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
-        self.fc = nn.Linear(7*7*32, num_classes)
+        self.fc = nn.Linear(75*75*32, num_classes)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -58,7 +58,7 @@ class CNN_bn(nn.Module):
 
 class CNN_bnd(nn.Module):
     def __init__(self, num_classes=4, num_epochs=50):
-        super(CNN, self).__init__()
+        super(CNN_bnd, self).__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=16,
                       kernel_size=3, stride=1, padding=2),
@@ -72,7 +72,7 @@ class CNN_bnd(nn.Module):
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2),
             nn.Dropout(0.5))
-        self.fc = nn.Linear(7*7*32, num_classes)
+        self.fc = nn.Linear(75*75*32, num_classes)
 
     def forward(self, x):
         out = self.layer1(x)
@@ -84,7 +84,7 @@ class CNN_bnd(nn.Module):
 
 class CNN_bnd1(nn.Module):
     def __init__(self, num_classes=4, num_epochs=50):
-        super(CNN, self).__init__()
+        super(CNN_bnd1, self).__init__()
         self.layer1 = nn.Sequential(
             nn.Conv2d(in_channels=1, out_channels=16,
                       kernel_size=3, stride=1, padding=2),
@@ -96,7 +96,7 @@ class CNN_bnd1(nn.Module):
             nn.Conv2d(16, 32, kernel_size=5, stride=1, padding=2),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=2, stride=2))
-        self.fc = nn.Linear(7*7*32, num_classes)
+        self.fc = nn.Linear(75*75*32, num_classes)
 
     def forward(self, x):
         out = self.layer1(x)
