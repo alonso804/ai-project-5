@@ -38,8 +38,8 @@ def train(model, optimizer, loss_fn, num_epochs, train_loader, device):
 
     for epoch in range(num_epochs):
         for i, (img, label) in enumerate(train_loader):
-            print(i)
-            print(img.shape)
+            # print(i)
+            # print(img.shape)
             img = img.to(device)
             label = label.to(device)
 
