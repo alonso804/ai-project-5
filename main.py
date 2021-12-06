@@ -60,9 +60,23 @@ def train(model, optimizer, loss_fn, num_epochs, train_loader, device):
     return loss_vals
 
 
+def accuracy(model, test_loader, device):
+    with torch.no_grad():
+        correct = 0
+        total = 0
+
+        for img, label in test_loader:
+            output = model(img)
+            _, predicted = torch.max(output.data, 1)
+            total += label.size(0)
+            correct += (predicted == label).sum().item()
+
+        print("Accuracy: {}%".format(100 * correct / total))
+
+
 def main():
     batch_size = 64
-    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     print(device)
 
     dataset = LungsDataset(
@@ -84,29 +98,32 @@ def main():
     test_loader = DataLoader(
         dataset=test_set, batch_size=batch_size, shuffle=True)
 
+    if torch.cuda.is_available():
+        def map_location(storage, loc): return storage.cuda()
+    else:
+        map_location = 'cpu'
+
     # Hyperparameters
     num_classes = 4  # Constant
     learning_rate = 0.001
     num_epochs = 50
 
     model = CNN().to(device)
-    # print(model)
+    # Get the model trained
+    model.load_state_dict(torch.load(
+        "./Results/CNN.txt", map_location=map_location))
+
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
-    # img, _ = dataset[13]
-    # print(img.shape)
-    # show_img(img, 'Temp')
-    # print(train_loader)
-    # for i, (img, label) in enumerate(train_loader):
-    # print(label)
-
     # Train
-    loss_results = train(model, optimizer, loss_fn,
-                         num_epochs, train_loader, device)
-    print("Saving ...")
-    torch.save(model.state_dict(), "model_90.txt")
-    print("Saved ...")
+    # loss_results = train(model, optimizer, loss_fn, num_epochs, train_loader, device)
+
+    # print("Saving ...")
+    # torch.save(model.state_dict(), "./Results/CNN.txt")
+    # print("Saved ...")
+
+    accuracy(model, test_loader, device)
 
 
 if __name__ == "__main__":
