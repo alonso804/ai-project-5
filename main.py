@@ -8,6 +8,8 @@ import math
 from torch.utils.data import DataLoader, random_split
 from CustomDataset import LungsDataset
 from CNN import CNN, CNN_bn, CNN_bnd, CNN_bnd1
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping
+from pytorch_lightning.trainer.trainer import Trainer
 
 
 def show_img(imgs, name, size=3, color=True):
@@ -74,9 +76,57 @@ def accuracy(model, test_loader, device):
         print("Accuracy: {}%".format(100 * correct / total))
 
 
+def early_stopping():
+    batch_size = 64
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    print(device)
+
+    dataset = LungsDataset(
+        csv_file="./data.csv",
+        root_dir="./",
+        transform=torchvision.transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Grayscale(),
+            transforms.ToTensor(),
+        ]))
+
+    size = len(dataset)
+    train_size = int(7 / 10 * size)
+    val_size = int(2 / 10 * size)
+    test_size = int(1 / 10 * size)
+
+    train_set, val_set, test_set = random_split(
+        dataset, [train_size, val_size, size - train_size - val_size])
+
+    train_loader = DataLoader(
+        dataset=train_set, batch_size=batch_size, shuffle=True)
+    test_loader = DataLoader(
+        dataset=test_set, batch_size=batch_size, shuffle=True)
+
+    # Hyperparameters
+    num_classes = 4  # Constant
+    learning_rate = 0.001
+    num_epochs = 50
+
+    model = CNN().to(device)
+
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
+    trainer = Trainer(callbacks=[EarlyStopping(monitor="val_loss")])
+    # Train
+    # loss_results = train(model, optimizer, loss_fn,
+    # num_epochs, train_loader, device)
+    trainer.fit(model, train_set, val_set)
+
+    # print("Saving ...")
+    # torch.save(model.state_dict(), "./Results/CNN.txt")
+    # print("Saved ...")
+
+
 def main():
     batch_size = 64
-    device = torch.device('cpu')
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print(device)
 
     dataset = LungsDataset(
@@ -108,23 +158,26 @@ def main():
     learning_rate = 0.001
     num_epochs = 50
 
-    model = CNN().to(device)
+    model = CNN_bn().to(device)
+
     # Get the model trained
-    model.load_state_dict(torch.load(
-        "./Results/CNN.txt", map_location=map_location))
+    # model.load_state_dict(torch.load("./Results/CNN_bn.txt", map_location=map_location))
 
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
+    trainer = Trainer(callbacks=[EarlyStopping(monitor="val_loss")])
     # Train
-    # loss_results = train(model, optimizer, loss_fn, num_epochs, train_loader, device)
+    loss_results = train(model, optimizer, loss_fn,
+                         num_epochs, train_loader, device)
 
-    # print("Saving ...")
-    # torch.save(model.state_dict(), "./Results/CNN.txt")
-    # print("Saved ...")
+    print("Saving ...")
+    torch.save(model.state_dict(), "./Results/CNN.txt")
+    print("Saved ...")
 
     accuracy(model, test_loader, device)
 
 
 if __name__ == "__main__":
+    # early_stopping()
     main()

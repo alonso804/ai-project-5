@@ -1,5 +1,5 @@
 CNN_1 Accuracy: 95.38582677165354%
-CNN_2 Accuracy: %
-CNN Batch Normalization Accuracy: %
-CNN Batch Normalization and Dropout Accuracy: %
-CNN Batch Normalization and Dropout 1st layer Accuracy: %
+CNN_2 Accuracy: 97.41732283464567%
+CNN Batch Normalization Accuracy: 95.05511811023622%
+CNN Batch Normalization and Dropout Accuracy: 93.41732283464567%
+CNN Batch Normalization and Dropout 1st layer Accuracy: 94.85039370078741%
