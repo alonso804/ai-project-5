@@ -3,6 +3,7 @@ import torch.nn as nn
 import math
 
 
+"""
 class CNN(nn.Module):
     def __init__(self, num_classes=10):
         super(CNN, self).__init__()
@@ -24,9 +25,9 @@ class CNN(nn.Module):
         out = out.reshape(out.size(0), -1)
         out = self.fc(out)
         return out
-
-
 """
+
+
 class CNN(nn.Module):
     def __init__(self, num_classes=4):
         super(CNN, self).__init__()
@@ -63,24 +64,14 @@ class CNN(nn.Module):
         self.fc = nn.Linear(4*4*512, num_classes)
 
     def forward(self, x):
-        # print("x   :", x.shape)
         out = self.layer1(x)
-        # print("out1:", out.shape)
         out = self.layer2(out)
-        # print("out2:", out.shape)
         out = self.layer3(out)
-        # print("out3:", out.shape)
         out = self.layer4(out)
-        # print("out4:", out.shape)
         out = self.layer5(out)
-        # print("out5:", out.shape)
         out = out.reshape(out.size(0), -1)
-        # print("out6:", out.shape)
         out = self.fc(out)
-        # print("out7:", out.shape)
-        # print()
         return out
-"""
 
 
 class CNN_bn(nn.Module):
