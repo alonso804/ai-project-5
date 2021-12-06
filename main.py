@@ -38,8 +38,6 @@ def train(model, optimizer, loss_fn, num_epochs, train_loader, device):
 
     for epoch in range(num_epochs):
         for i, (img, label) in enumerate(train_loader):
-            # print(i)
-            # print(img.shape)
             img = img.to(device)
             label = label.to(device)
 
@@ -91,7 +89,7 @@ def main():
     learning_rate = 0.001
     num_epochs = 50
 
-    model = CNN_bnd().to(device)
+    model = CNN_bn().to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -106,7 +104,7 @@ def main():
     loss_results = train(model, optimizer, loss_fn,
                          num_epochs, train_loader, device)
     print("Saving ...")
-    torch.save(model.state_dict(), "model_70.txt")
+    torch.save(model.state_dict(), "model_90.txt")
     print("Saved ...")
 
 
